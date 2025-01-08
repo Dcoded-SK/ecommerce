@@ -25,7 +25,7 @@
 
 
 <script>
-    $(document).on("click", "#addNewUser", function(event) {
+    function addNewUser() {
         // Clear previous error messages
         $('.text-danger').remove();
 
@@ -57,7 +57,7 @@
             }
         });
 
-    });
+    }
 
 </script>
 
@@ -166,7 +166,7 @@
                             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
 
 
-                            <button type="button" class="btn btn-primary btn-sm" id="addNewUser">Submit</button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="addNewUser()">Submit</button>
 
                         </div>
                         <div class="col-5">
