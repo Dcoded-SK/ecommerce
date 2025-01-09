@@ -28,6 +28,8 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('add-book', 'addBookView');
     Route::get('/view-customers', [AdminController::class, 'viewCustomers'])->name('view_customers');
     Route::get('/view-suppliers', [AdminController::class, 'viewSuppliers'])->name('view_suppliers');
+    Route::get('/view-admins', [AdminController::class, 'viewAdmins'])->name('view_admins');
+
 
     Route::get('/view-category', 'viewCategory');
 });

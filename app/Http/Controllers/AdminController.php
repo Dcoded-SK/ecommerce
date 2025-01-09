@@ -16,6 +16,7 @@ class AdminController extends Controller
     }
 
 
+    // to return customers list
     public function viewCustomers(Request $request)
     {
         if ($request->ajax()) {
@@ -26,6 +27,7 @@ class AdminController extends Controller
         return view("adminFolder.viewCustomer"); // Load the Blade view for non-AJAX requests
     }
 
+    // to return suppliers list
     public function viewSuppliers(Request $request)
     {
 
@@ -36,6 +38,17 @@ class AdminController extends Controller
         }
 
         return view("adminFolder.viewSupplier"); // Load the Blade view for non-AJAX requests
+    }
+
+    public function viewAdmins(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $customers = User::where("role", "admin")->get(); // Fetch only required columns
+            return DataTables::of($customers)->make(true); // Return JSON response for DataTables
+        }
+
+        return view("adminFolder.viewAdmin");
     }
 
 
