@@ -13,8 +13,7 @@
     <meta name="description" content="">
 
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{asset('css/normalize.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('icomoon/icomoon.css')}}">
@@ -26,73 +25,74 @@
 
 
 <script>
-// to register new user
-function ddNewUser() {
-    // Clear previous error messages
-    $('.text-danger').remove();
+    // to register new user
+    function addNewUser() {
+        // Clear previous error messages
+        $('.text-danger').remove();
 
-    const form = new FormData(document.getElementById("registeration_form"));
+        const form = new FormData(document.getElementById("registeration_form"));
 
-    $.ajax({
-        url: "/new-user",
-        method: "POST",
-        data: form,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            alert(response.message); // Should display "Registration successful"
-            $('#registerationModal').modal('hide');
-            document.getElementById("registeration_form").reset();
-        },
-        error: function(xhr) {
-            console.error(xhr); // Log the error response for further debugging
-            if (xhr.status === 422) { // Validation error
-                const errors = xhr.responseJSON.errors;
-                Object.keys(errors).forEach(field => {
-                    const errorMessage = errors[field][0];
-                    $(`[name="${field}"]`).after(`<div class="text-danger">${errorMessage}</div>`);
-                });
-            } else {
-                alert('Something went wrong. Please try again later.');
+        $.ajax({
+            url: "/new-user"
+            , method: "POST"
+            , data: form
+            , processData: false
+            , contentType: false
+            , success: function(response) {
+                alert(response.message); // Should display "Registration successful"
+                $('#registerationModal').modal('hide');
+                document.getElementById("registeration_form").reset();
             }
-        }
-    });
-
-}
-
-// to login
-
-function loginKaro() {
-    const form = new FormData(document.getElementById("login_form"));
-    $('.text-danger').remove(); // Clear previous error messages
-
-    $.ajax({
-        url: "/login",
-        method: "POST",
-        processData: false,
-        contentType: false,
-        data: form,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // CSRF token
-        },
-        success: function(response) {
-            alert(response.message);
-            window.location.href = response.redirect; // Redirect user
-        },
-        error: function(xhr) {
-            console.error(xhr); // Log the error for debugging
-            if (xhr.status === 422) { // Validation error
-                const errors = xhr.responseJSON.errors;
-                Object.keys(errors).forEach(field => {
-                    const errorMessage = errors[field][0];
-                    $(`[name="${field}"]`).after(`<div class="text-danger">${errorMessage}</div>`);
-                });
-            } else {
-                alert('Something went wrong. Please try again later.');
+            , error: function(xhr) {
+                console.error(xhr); // Log the error response for further debugging
+                if (xhr.status === 422) { // Validation error
+                    const errors = xhr.responseJSON.errors;
+                    Object.keys(errors).forEach(field => {
+                        const errorMessage = errors[field][0];
+                        $(`[name="${field}"]`).after(`<div class="text-danger">${errorMessage}</div>`);
+                    });
+                } else {
+                    alert('Something went wrong. Please try again later.');
+                }
             }
-        }
-    });
-}
+        });
+
+    }
+
+    // to login
+
+    function loginKaro() {
+        const form = new FormData(document.getElementById("login_form"));
+        $('.text-danger').remove(); // Clear previous error messages
+
+        $.ajax({
+            url: "/login"
+            , method: "POST"
+            , processData: false
+            , contentType: false
+            , data: form
+            , headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // CSRF token
+            }
+            , success: function(response) {
+                alert(response.message);
+                window.location.href = response.redirect; // Redirect user
+            }
+            , error: function(xhr) {
+                console.error(xhr); // Log the error for debugging
+                if (xhr.status === 422) { // Validation error
+                    const errors = xhr.responseJSON.errors;
+                    Object.keys(errors).forEach(field => {
+                        const errorMessage = errors[field][0];
+                        $(`[name="${field}"]`).after(`<div class="text-danger">${errorMessage}</div>`);
+                    });
+                } else {
+                    alert('Something went wrong. Please try again later.');
+                }
+            }
+        });
+    }
+
 </script>
 
 
@@ -130,8 +130,7 @@ function loginKaro() {
 
 
     <!-- Login  Modal  Form -->
-    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -146,15 +145,13 @@ function loginKaro() {
 
                             <div class="col-6">
                                 <label for="">Email:</label>
-                                <label for=""><input type="text" name="u_email" placeholder="Enter you email"
-                                        class="form-control"></label>
+                                <label for=""><input type="text" name="u_email" placeholder="Enter you email" class="form-control"></label>
                                 <div class="text-danger" id="u_email"></div>
 
                             </div>
                             <div class="col-6">
                                 <label for="">Password:</label>
-                                <label for=""><input type="password" name="u_password" class="form-control"
-                                        placeholder="Enter your password"></label>
+                                <label for=""><input type="password" name="u_password" class="form-control" placeholder="Enter your password"></label>
                                 <div class="text-danger" id="u_password"></div>
 
                             </div>
@@ -173,8 +170,7 @@ function loginKaro() {
                         <div class="col-8">
                             <p>
                                 Don't have an account?
-                                <span data-bs-toggle="modal" data-bs-target="#registerationModal"
-                                    class="fw-bold text-primary" style="cursor: pointer;">
+                                <span data-bs-toggle="modal" data-bs-target="#registerationModal" class="fw-bold text-primary" style="cursor: pointer;">
                                     Register here
                                 </span>
                             </p>
@@ -187,8 +183,7 @@ function loginKaro() {
     </div>
 
     <!-- Registeration  Modal  Form -->
-    <div class="modal fade" id="registerationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="registerationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -234,16 +229,14 @@ function loginKaro() {
                     <hr>
                     <div class="row">
                         <div class="col-5">
-                            <button type="button" class="btn btn-secondary btn-sm"
-                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
 
 
                             <button type="button" class="btn btn-primary btn-sm" onclick="addNewUser()">Submit</button>
 
                         </div>
                         <div class="col-5">
-                            <p>Back to Login: <span class="fw-bold text-primary" data-bs-toggle="modal"
-                                    data-bs-target="#loginModal" style="cursor: pointer;">Login</span> </p>
+                            <p>Back to Login: <span class="fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#loginModal" style="cursor: pointer;">Login</span> </p>
                         </div>
                     </div>
 
@@ -286,8 +279,7 @@ function loginKaro() {
                     <div class="col-md-6">
                         <div class="right-element">
 
-                            <a href="#" class="user-account for-buy" data-bs-toggle="modal"
-                                data-bs-target="#loginModal"><i class="icon icon-user"></i><span>
+                            <a href="#" class="user-account for-buy" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="icon icon-user"></i><span>
                                     <!-- Button trigger modal -->
                                     Account
                                 </span></a>
@@ -301,8 +293,7 @@ function loginKaro() {
                                         <i class="icon icon-search"></i>
                                     </a>
                                     <form role="search" method="get" class="search-box">
-                                        <input class="search-field text search-input" placeholder="Search"
-                                            type="search">
+                                        <input class="search-field text search-input" placeholder="Search" type="search">
                                     </form>
                                 </div>
                             </div>
@@ -392,8 +383,7 @@ function loginKaro() {
                                     ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis
                                     urna, a eu.</p>
                                 <div class="btn-wrap">
-                                    <a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
-                                            class="icon icon-ns-arrow-right"></i></a>
+                                    <a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i class="icon icon-ns-arrow-right"></i></a>
                                 </div>
                             </div>
                             <!--banner-content-->
@@ -408,8 +398,7 @@ function loginKaro() {
                                     ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis
                                     urna, a eu.</p>
                                 <div class="btn-wrap">
-                                    <a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
-                                            class="icon icon-ns-arrow-right"></i></a>
+                                    <a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i class="icon icon-ns-arrow-right"></i></a>
                                 </div>
                             </div>
                             <!--banner-content-->
@@ -541,8 +530,7 @@ function loginKaro() {
                 <div class="col-md-12">
 
                     <div class="btn-wrap align-right">
-                        <a href="#" class="btn-accent-arrow">View all products <i
-                                class="icon icon-ns-arrow-right"></i></a>
+                        <a href="#" class="btn-accent-arrow">View all products <i class="icon icon-ns-arrow-right"></i></a>
                     </div>
 
                 </div>
@@ -580,8 +568,7 @@ function loginKaro() {
                                         libero ipsum enim pharetra hac.</p>
                                     <div class="item-price">$ 45.00</div>
                                     <div class="btn-wrap">
-                                        <a href="#" class="btn-accent-arrow">shop it now <i
-                                                class="icon icon-ns-arrow-right"></i></a>
+                                        <a href="#" class="btn-accent-arrow">shop it now <i class="icon icon-ns-arrow-right"></i></a>
                                     </div>
                                 </div>
 
@@ -628,8 +615,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item1.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -644,8 +630,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item2.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -660,8 +645,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item3.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -676,8 +660,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item4.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -695,8 +678,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item5.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -711,8 +693,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item6.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -727,8 +708,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item7.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -743,8 +723,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item8.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -764,8 +743,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item2.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -780,8 +758,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item4.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -796,8 +773,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item6.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -812,8 +788,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item8.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -833,8 +808,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item1.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -849,8 +823,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item3.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -865,8 +838,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item5.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -881,8 +853,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item7.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -901,8 +872,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item1.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -917,8 +887,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item3.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -933,8 +902,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item5.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -949,8 +917,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item7.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -969,8 +936,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item5.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -985,8 +951,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item7.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -1005,8 +970,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item5.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -1021,8 +985,7 @@ function loginKaro() {
                                     <div class="product-item">
                                         <figure class="product-style">
                                             <img src="images/tab-item7.jpg" alt="Books" class="product-item">
-                                            <button type="button" class="add-to-cart"
-                                                data-product-tile="add-to-cart">Add to
+                                            <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button>
                                         </figure>
                                         <figcaption>
@@ -1322,8 +1285,7 @@ function loginKaro() {
                     <div class="row">
 
                         <div class="btn-wrap align-center">
-                            <a href="#" class="btn btn-outline-accent btn-accent-arrow" tabindex="0">Read All Articles<i
-                                    class="icon icon-ns-arrow-right"></i></a>
+                            <a href="#" class="btn btn-outline-accent btn-accent-arrow" tabindex="0">Read All Articles<i class="icon icon-ns-arrow-right"></i></a>
                         </div>
                     </div>
 
@@ -1494,8 +1456,7 @@ function loginKaro() {
                         <div class="row">
 
                             <div class="col-md-6">
-                                <p>© 2022 All rights reserved. Free HTML Template by <a
-                                        href="https://www.templatesjungle.com/" target="_blank">TemplatesJungle</a></p>
+                                <p>© 2022 All rights reserved. Free HTML Template by <a href="https://www.templatesjungle.com/" target="_blank">TemplatesJungle</a></p>
                             </div>
 
                             <div class="col-md-6">
@@ -1528,8 +1489,7 @@ function loginKaro() {
     </div>
 
     <script src="{{asset('js/jquery-1.11.0.min.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>
     <script src="{{asset('js/plugins.js')}}"></script>
     <script src="{{asset('js/script.js')}}"></script>

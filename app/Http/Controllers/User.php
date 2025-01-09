@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User as ModelsUser;
-use Auth;
 use Illuminate\Http\Request;
+use App\Models\User as ModelsUser;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Controller
 {
@@ -80,5 +80,15 @@ class User extends Controller
         ], 401);
     }
 
+    public function profile()
+    {
+        return view("adminFolder.profile");
+    }
 
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect('/')->with("error", "You are no more logged in");
+    }
 }

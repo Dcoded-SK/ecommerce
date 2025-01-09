@@ -9,13 +9,13 @@
 
         <div class="row">
 
-            <div class="col-10 my-2">
-                <div class="input-group">
-                    <input class="form-control border rounded-pill" type="search" value="search" id="example-search-input">
-                </div>
+            <div class="col-8 my-2">
+                <h3 class="text-center">Management is the best skill!</h3>
             </div>
-            <div class="col-2 ">
-                <h5 class="m-2">Profile</h5>
+            <div class="col-4 ">
+                <a href="/profile">
+                    <h5 class="m-2 text-end"><img src="{{ asset('images/defaultuser.png') }}" alt=""></h5>
+                </a>
             </div>
         </div>
 

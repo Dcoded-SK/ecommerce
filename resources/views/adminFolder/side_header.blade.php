@@ -3,7 +3,7 @@
 </a>
 
 <div class="dropdown mt-3">
-    <button class="btn btn-light dropdown-toggle side_btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-light dropdown-toggle side_btn form-control " type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Books
     </button>
     <ul class="dropdown-menu">
@@ -13,7 +13,16 @@
 </div>
 
 <div class="dropdown mt-3">
-    <button class="btn btn-light dropdown-toggle side_btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-light dropdown-toggle side_btn form-control " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Genre
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/view-category">View genre</a></li>
+    </ul>
+</div>
+
+<div class="dropdown mt-3">
+    <button class="btn btn-light dropdown-toggle side_btn form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Orders
     </button>
     <ul class="dropdown-menu">
@@ -24,21 +33,13 @@
 </div>
 
 <div class="dropdown mt-3">
-    <button class="btn btn-light dropdown-toggle side_btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Customers
+    <button class="btn btn-light dropdown-toggle side_btn form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Users
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="/view-active-customers">Active Customers</a></li>
-        <li><a class="dropdown-item" href="/view-inactive-customers">Inactive Customers</a></li>
-    </ul>
-</div>
+        <li><a class="dropdown-item" href="/view-customers">Customers</a></li>
+        <li><a class="dropdown-item" href="/view-suppliers">Supplier</a></li>
+        <li><a class="dropdown-item" href="/view-admins">Admins</a></li>
 
-<div class="dropdown mt-3">
-    <button class="btn btn-light dropdown-toggle side_btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Suppliers
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="/view-active-suppliers">Active Suppliers</a></li>
-        <li><a class="dropdown-item" href="/view-inactive-suppliers">Inactive Suppliers</a></li>
     </ul>
 </div>
