@@ -32,4 +32,5 @@ Route::controller(AdminController::class)->group(function () {
 
 Route::controller(User::class)->group(function () {
     Route::post("new-user", "addNewUser");
+    Route::post("login", "login");
 });
