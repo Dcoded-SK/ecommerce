@@ -28,6 +28,7 @@
         .side_btn {
             background-color: #efd9dc;
         }
+
     </style>
 </head>
 
@@ -50,6 +51,8 @@
 
     <!-- jQuery (Always Load Before DataTables Scripts) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -61,26 +64,26 @@
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#customertable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{route("view_customers")}}',
-                    type: 'GET',
-                    headers: {
+                processing: true
+                , serverSide: true
+                , ajax: {
+                    url: '{{route("view_customers")}}'
+                    , type: 'GET'
+                    , headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     }
-                },
-                columns: [{
-                    data: 'name',
-                    name: 'name'
+                }
+                , columns: [{
+                    data: 'name'
+                    , name: 'name'
                 }, {
-                    data: 'email',
-                    name: 'email'
+                    data: 'email'
+                    , name: 'email'
                 }, {
-                    data: 'role',
-                    name: 'role'
+                    data: 'role'
+                    , name: 'role'
                 }]
             });
 
@@ -89,24 +92,24 @@
 
 
             $('#suppliertable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{route("view_suppliers")}}',
-                    type: 'GET',
-                    headers: {
+                processing: true
+                , serverSide: true
+                , ajax: {
+                    url: '{{route("view_suppliers")}}'
+                    , type: 'GET'
+                    , headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     }
-                },
-                columns: [{
-                    data: 'name',
-                    name: 'name'
+                }
+                , columns: [{
+                    data: 'name'
+                    , name: 'name'
                 }, {
-                    data: 'email',
-                    name: 'email'
+                    data: 'email'
+                    , name: 'email'
                 }, {
-                    data: 'role',
-                    name: 'role'
+                    data: 'role'
+                    , name: 'role'
                 }]
             });
 
@@ -114,27 +117,80 @@
             // to show the admin list
 
             $('#admintable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{route("view_admins")}}',
-                    type: 'GET',
-                    headers: {
+                processing: true
+                , serverSide: true
+                , ajax: {
+                    url: '{{route("view_admins")}}'
+                    , type: 'GET'
+                    , headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     }
-                },
-                columns: [{
-                    data: 'name',
-                    name: 'name'
+                }
+                , columns: [{
+                    data: 'name'
+                    , name: 'name'
                 }, {
-                    data: 'email',
-                    name: 'email'
+                    data: 'email'
+                    , name: 'email'
                 }, {
-                    data: 'role',
-                    name: 'role'
+                    data: 'role'
+                    , name: 'role'
                 }]
             });
+
+
+            // to show all the genre of books
+            $('#genretable').DataTable({
+                processing: true
+                , serverSide: true
+                , responsive: true, // Makes the table responsive
+                ajax: {
+                    url: '{{ route("view_genre") }}'
+                    , type: 'GET'
+                    , headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    , }
+                    , error: function(xhr, error, code) {
+                        console.error('Error fetching data:', error);
+                    }
+                , }
+                , columns: [{
+                        data: 'id'
+                        , name: 'id'
+                    }
+                    , {
+                        data: 'name'
+                        , name: 'name'
+                    }
+                    , {
+                        data: 'created_at'
+                        , name: 'created_at'
+                        , render: function(data, type, row) {
+                            return moment(data).format('YYYY-MM-DD HH:mm:ss'); // Format the date
+                        }
+                    }
+                , ]
+                , lengthChange: true, // Allows changing the number of rows displayed
+                searching: true, // Enables the search bar
+                ordering: true, // Enables column-based ordering
+            });
+
         });
+
+        function newGenre() {
+            $('#genreform').show();
+        }
+
+        function exportGenre() {
+            $.ajax({
+                url: '/export-genre'
+                , method: "get"
+                , error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+
     </script>
 </body>
 

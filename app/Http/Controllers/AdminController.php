@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\GenreExport;
+use App\Imports\GenreImport;
+use App\Models\Genre;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use PDO;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
@@ -55,8 +60,34 @@ class AdminController extends Controller
 
     // to show categoris
 
-    public function viewCategory()
+    public function viewGenre(Request $request)
     {
-        return view("adminFolder.view_category");
+
+        if ($request->ajax()) {
+
+            $genre = Genre::query();
+
+            return DataTables::of($genre)->make(true);
+        }
+        return view("adminFolder.viewGenre");
+    }
+
+    // to add new genres using export
+
+    public function newGenre(Request $request)
+    {
+        $request->validate([
+            'genres' => 'required|mimes:xlsx,xls,html'
+        ]);
+
+
+        Excel::import(new GenreImport, $request['genres']);
+
+        return redirect()->back()->with("success", "Genre has be recored");
+    }
+
+    public function exportGenre()
+    {
+        return Excel::download(new GenreExport, "Genre.xlsx");
     }
 }

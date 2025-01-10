@@ -17,7 +17,7 @@
         Genre
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="/view-category">View genre</a></li>
+        <li><a class="dropdown-item" href="/view-genre">View genre</a></li>
     </ul>
 </div>
 
