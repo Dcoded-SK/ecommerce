@@ -16,46 +16,61 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// This is 
+// to open guest home page
 Route::controller(firstController::class)->group(function () {
     Route::get('/', 'home')->name("home");
 });
 
 
+// to open login page
+Route::post("login", [User::class, "login"]);
+
+
+
+
 // this is for admin related routes
-Route::controller(AdminController::class)->group(function () {
-    // Route for the admin home page
-    Route::get('/admin-home', 'adminHome')->name('admin-home');
 
-    // Route to show the 'add book' view
-    Route::get('add-book', 'addBookView');
+Route::middleware(['checkUser'])->group(function () {
+    Route::controller(AdminController::class)->group(function () {
+        // Route for the admin home page
+        Route::get('/admin-home', 'adminHome')->name('admin-home')->middleware("checkUser");
 
-    // Route to view customers (using the viewCustomers method of AdminController)
-    Route::get('/view-customers', [AdminController::class, 'viewCustomers'])->name('view_customers');
+        // Route to show the 'add book' view
+        Route::get('add-book', 'addBookView')->middleware('checkPermission:add_books');
+        Route::post('add-book', 'addBookMethod')->middleware("checkPermission:add_books");
+        Route::get('view-books', 'viewBooks');
 
-    // Route to view suppliers (using the viewSuppliers method of AdminController)
-    Route::get('/view-suppliers', [AdminController::class, 'viewSuppliers'])->name('view_suppliers');
+        // Route to view customers (using the viewCustomers method of AdminController)
+        Route::get('/view-customers', [AdminController::class, 'viewCustomers'])->name('view_customers');
 
-    // Route to view admins (using the viewAdmins method of AdminController)
-    Route::get('/view-admins', [AdminController::class, 'viewAdmins'])->name('view_admins');
+        // Route to view suppliers (using the viewSuppliers method of AdminController)
+        Route::get('/view-suppliers', [AdminController::class, 'viewSuppliers'])->name('view_suppliers');
 
-    // Route to view genre (using the viewGenre method of AdminController)
-    Route::get('/view-genre', 'viewGenre')->name('view_genre');
+        // Route to view admins (using the viewAdmins method of AdminController)
+        Route::get('/view-admins', [AdminController::class, 'viewAdmins'])->name('view_admins');
 
-    // Route to handle adding a new genre (using the newGenre method of AdminController)
-    Route::post('/addgenre', 'newGenre');
+        // Route to view genre (using the viewGenre method of AdminController)
+        Route::get('/view-genre', 'viewGenre')->name('view_genre')->middleware('checkPermission:add_genre');
 
-    // Route to export genre
+        // Route to handle adding a new genre (using the newGenre method of AdminController)
+        Route::post('/addgenre', 'newGenre');
 
-    Route::get('export-genre', 'exportGenre');
-});
+        // Route to export genre
 
+        Route::get('export-genre', 'exportGenre');
 
-// this is for user related routes
+        // Route to assing permissions to rols
 
-Route::controller(User::class)->group(function () {
-    Route::post("new-user", "addNewUser");
-    Route::post("login", "login");
-    Route::get("profile", "profile")->name("profile");
-    Route::get("logout", 'logout');
+        Route::get('assign-permissions-{role}', 'assignPermissionsView');
+        Route::post('assign-permission', 'assignPermissionsMethod');
+    });
+
+    // this is for user related routes
+
+    Route::controller(User::class)->group(function () {
+
+        Route::post("new-user", [User::class, "addNewUser"])->name("new-user");
+        Route::get("profile", [User::class, "profile"])->name("profile");
+        Route::get("logout", [User::class, "logout"])->name("logout");
+    });
 });

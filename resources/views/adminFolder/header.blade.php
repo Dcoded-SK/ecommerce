@@ -10,7 +10,7 @@
         <div class="row">
 
             <div class="col-8 my-2">
-                <h3 class="text-center">Management is the best skill!</h3>
+                <h3 class="text-center">Management is the best skill! ({{ Auth::user()->name }})</h3>
             </div>
             <div class="col-4 ">
                 <a href="/profile">

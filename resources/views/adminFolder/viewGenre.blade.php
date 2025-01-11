@@ -22,12 +22,14 @@
     <div class="row">
 
         <div class="col-6">
-            <div class="btn btn-primary" onclick="newGenre()">Import</div>
+            <div class="btn btn-primary" onclick="newGenre()">Import Genre</div>
 
         </div>
 
         <div class="col-6">
-            <div class="btn btn-secondary" onclick="exportGenre()">Import</div>
+            <a href="/export-genre">
+                <div class="btn btn-secondary">Export Genre</div>
+            </a>
 
         </div>
     </div>

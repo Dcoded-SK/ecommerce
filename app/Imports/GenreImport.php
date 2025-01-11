@@ -15,9 +15,8 @@ class GenreImport implements ToModel
     public function model(array $row)
     {
         return new Genre([
-            //
-
-            'name' => $row[0]
+            // 'id' => $row[0],
+            'name' => $row[1],
         ]);
     }
 

@@ -29,14 +29,44 @@
             background-color: #efd9dc;
         }
 
+        .img {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+
+        }
+
     </style>
 </head>
 
 <body>
+
+
     <div class="container-fluid">
         <div class="row header">
             @include('adminFolder.header')
         </div>
+
+
+
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{session('success')}}
+        </div>
+        @endif
+
+
+
+
+
+
+
+
+        @if (session('error'))
+        <div class="alert alert-danger">
+            {{session('error')}}
+        </div>
+        @endif
         <div class="row bg-secondary">
             <!-- Sidebar -->
             <div class="col-2 side_header" style="border-right:3px white solid;min-height:93vh" aria-label="Sidebar">
@@ -179,16 +209,6 @@
 
         function newGenre() {
             $('#genreform').show();
-        }
-
-        function exportGenre() {
-            $.ajax({
-                url: '/export-genre'
-                , method: "get"
-                , error: function(error) {
-                    console.error(error);
-                }
-            });
         }
 
     </script>

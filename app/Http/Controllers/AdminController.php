@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Exports\GenreExport;
 use App\Imports\GenreImport;
+use App\Models\Books;
 use App\Models\Genre;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use PDO;
+use Spatie\Permission\Contracts\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role as ModelsRole;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
@@ -17,8 +21,31 @@ class AdminController extends Controller
 
     public function adminHome()
     {
-        return view('adminFolder.home');
+        // Fetch all roles with permissions
+        $roles = ModelsRole::with('permissions')->get();
+
+        // Retrieve users and assign roles based on the 'role' column
+        $users = User::all();  // Get all users
+        foreach ($users as $user) {
+            // Sync the role based on the 'role' column
+            if ($user->role == 'user') {
+                $user->syncRoles(['user']);
+            } elseif ($user->role == 'supplier') {
+                $user->syncRoles(['supplier']);
+            } elseif ($user->role == 'admin') {
+                $user->syncRoles(['admin']);
+            }
+        }
+
+        ModelsRole::where("name", "admin")->first()->syncPermissions(Permission::all());
+
+
+        $books = Books::limit(3)->orderBy("created_at", "desc")->get();
+        // Pass roles to the view
+        return view('adminFolder.home', compact('roles', 'books'));
     }
+
+
 
 
     // to return customers list
@@ -86,8 +113,90 @@ class AdminController extends Controller
         return redirect()->back()->with("success", "Genre has be recored");
     }
 
+
+    // to download genre list
     public function exportGenre()
     {
+
+
         return Excel::download(new GenreExport, "Genre.xlsx");
+    }
+
+
+    // to assing permission to route
+
+    public function assignPermissionsView($role)
+    {
+
+        $role = ModelsRole::where("name", $role)->first();
+
+        $permissions = $role->permissions;
+        $role = $role->name;
+
+        $all_permissions = Permission::all();
+
+
+
+        return view("adminFolder.assing_permission_roles", compact("permissions", "role", "all_permissions"));
+    }
+
+    public function assignPermissionsMethod(Request $request)
+    {
+
+        $role = ModelsRole::where("name", $request->role)->first();
+
+        $role->syncPermissions($request->permissions);
+
+        return redirect()->back()->with("success", "Permission assign permission successfully");
+    }
+
+    // to add books
+
+    public function addBookView()
+    {
+
+        $genre = Genre::all();
+
+        return view("adminFolder.add_book", compact("genre"));
+    }
+
+    public function addBookMethod(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|min:3|max:30|unique:books,title',
+            'author' => 'required|min:3|max:30',
+            'genre' => 'required',
+            'picture' => 'required|mimes:png,jpg,webp',
+            'price' => 'required|'
+
+        ]);
+
+        $image = $request->picture;
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+        // Move the file to the 'public/books_picture' directory
+        $image->move(public_path('books_picture'), $imageName);
+
+
+        $insert = new Books();
+
+        $insert->title = $request['title'];
+        $insert->author = $request['author'];
+        $insert->genre_id = $request['genre'];
+        $insert->picture = $imageName;
+        $insert->price = $request['price'];
+        $insert->save();
+
+
+        return redirect("admin-home")->with("success", "New books has been added");
+    }
+
+    // to show the books
+
+    public function viewBooks()
+    {
+        $books = Books::orderBy("created_at", "asc")->paginate(1);
+
+        return view("adminFolder.view_books", compact("books"));
     }
 }
