@@ -195,7 +195,7 @@ class AdminController extends Controller
 
     public function viewBooks()
     {
-        $books = Books::orderBy("created_at", "asc")->paginate(1);
+        $books = Books::orderBy("created_at", "asc")->paginate(3);
 
         return view("adminFolder.view_books", compact("books"));
     }

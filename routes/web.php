@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\firstController;
 use App\Http\Controllers\User;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +18,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 // to open guest home page
-Route::controller(firstController::class)->group(function () {
-    Route::get('/', 'home')->name("home");
+Route::get('/', [firstController::class, 'home'])->name("home");
+
+
+
+// Logged user controller
+
+Route::middleware(['checkUser'])->group(function () {
+
+    Route::get('/user-home', [UserController::class, 'userHome'])->name('userHome');
+    Route::get('add-to-cart-{id}', [UserController::class, 'addToCart']);
+    Route::get('user-profile', [UserController::class, 'userProfile']);
+    Route::get('cart', [UserController::class, 'cart'])->name('cart');
 });
 
 

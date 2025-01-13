@@ -10,4 +10,14 @@ class Books extends Model
     use HasFactory;
 
     protected $table = "books";
+
+    public function getCart()
+    {
+        return $this->hasMany(cart::class);
+    }
+
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class);
+    }
 }
