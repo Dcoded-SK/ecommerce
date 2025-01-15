@@ -44,6 +44,48 @@ class UserController extends Controller
         return redirect()->route("cart")->with("success", "Item has been added");
     }
 
+
+    public function book($id)
+    {
+        $book = Books::where("id", $id)->first();;
+
+        return view('userFolder.view_product', compact('book'));
+    }
+
+
+    public function changeQuantity($id, $q)
+    {
+        if ($q < 1) {
+            return redirect()->back()->with("error", "Item quantity must no be less than 1");
+        } else {
+            $quantity = cart::where("id", $id)->where("user_id", auth()->user()->id)->first();
+
+            if ($quantity) {
+                $quantity->quantity = $q;
+                $quantity->save();
+            }
+
+            return redirect()->back();
+        }
+    }
+
+    public function deleteCartItem($id)
+    {
+        $del = cart::where("id", $id)->where("user_id", auth()->user()->id)->first();
+        if ($del) {
+            $del->delete();
+        }
+
+        return redirect()->back();
+    }
+
+    public function checkout()
+    {
+
+        $cart_items = cart::where("user_id", auth()->user()->id)->get();
+        return view('userFolder.checkout', compact("cart_items"));
+    }
+
     public function userProfile()
     {
 

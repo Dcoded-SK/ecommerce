@@ -93,29 +93,74 @@
         });
     }
 
+
+    function deletCartItem(id) {
+        const cD = confirm("Are you sure want to remove this item from cart?");
+
+        if (cD) {
+
+
+            window.location.href = "/delete-cart-item-" + id;
+        }
+
+    }
+
+
+    // Wait for the DOM to fully load
+    document.addEventListener("DOMContentLoaded", function() {
+        // Hide the success message after 5 seconds
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Hide the error message after 5 seconds
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+    });
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+        'use strict'
+
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+    }())
+
 </script>
 
 
 
 @if (session('success'))
-<div class="alert alert-success">
-    {{session('success')}}
+<div class="alert alert-success" id="success-message">
+    {{ session('success') }}
 </div>
 @endif
-
-
-
-
-
-
-
 
 @if (session('error'))
-<div class="alert alert-danger">
-    {{session('error')}}
+<div class="alert alert-danger" id="error-message">
+    {{ session('error') }}
 </div>
 @endif
-
 
 
 
@@ -338,11 +383,11 @@
                                 <ul class="menu-list">
                                     <li class="menu-item active"><a href="/">Home</a></li>
 
-                                    <li class="menu-item"><a href="#featured-books" class="nav-link">Featured</a></li>
-                                    <li class="menu-item"><a href="#popular-books" class="nav-link">Popular</a></li>
-                                    <li class="menu-item"><a href="#special-offer" class="nav-link">Offer</a></li>
-                                    <li class="menu-item"><a href="#latest-blog" class="nav-link">Articles</a></li>
-                                    <li class="menu-item"><a href="#download-app" class="nav-link">Download App</a></li>
+                                    <li class="menu-item"><a href="/#featured-books" class="nav-link">Featured</a></li>
+                                    <li class="menu-item"><a href="/#popular-books" class="nav-link">Popular</a></li>
+                                    <li class="menu-item"><a href="/#special-offer" class="nav-link">Offer</a></li>
+                                    <li class="menu-item"><a href="/#latest-blog" class="nav-link">Articles</a></li>
+                                    <li class="menu-item"><a href="/#download-app" class="nav-link">Download App</a></li>
                                 </ul>
 
                                 <div class="hamburger">

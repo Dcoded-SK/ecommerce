@@ -26,7 +26,7 @@ return new class extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->decimal("quantity")->default(1);
+            $table->integer("quantity")->default(1);
 
             $table->timestamps();
         });

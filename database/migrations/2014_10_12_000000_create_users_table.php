@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone_number')->nullable();
+            $table->text("address")->nullable();
+            $table->string("country")->nullable();
+            $table->string("state")->nullable();
+            $table->string("pin_code")->nullable();
             $table->string("profile_picture")->default("default.jpg");
             $table->string("role")->default("user");
             $table->string("permitted_as_seller")->default("no");
