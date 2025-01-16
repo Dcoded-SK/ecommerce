@@ -28,12 +28,13 @@ Route::middleware(['checkUser'])->group(function () {
 
     Route::get('/user-home', [UserController::class, 'userHome'])->name('userHome');
     Route::get('add-to-cart-{id}', [UserController::class, 'addToCart']);
-    Route::get('user-profile', [UserController::class, 'userProfile']);
+    Route::get('user-profile', [UserController::class, 'userProfile'])->name('user-profile');
     Route::get('cart', [UserController::class, 'cart'])->name('cart');
     Route::get('/book{id}', [UserController::class, 'book']);
     Route::get('change-quantity-{id}-{q}', [UserController::class, 'changeQuantity']);
     Route::get('delete-cart-item-{id}', [UserController::class, 'deleteCartItem']);
     Route::get('checkout', [UserController::class, 'checkout']);
+    Route::post('checkout', [UserController::class, 'checkoutKaro']);
 });
 
 

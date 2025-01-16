@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('books_id'); // Ensure this matches the type in 'books' table
+            $table->unsignedBigInteger('book_id'); // Ensure this matches the type in 'books' table
             $table->unsignedBigInteger('user_id'); // Ensure this matches the type in 'users' table
 
-            $table->foreign('books_id')
+            $table->foreign('book_id')
                 ->references('id')
                 ->on('books')
                 ->onDelete('cascade');

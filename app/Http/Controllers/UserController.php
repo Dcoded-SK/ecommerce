@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\bill;
 use App\Models\Books;
 use App\Models\cart;
 use App\Models\Genre;
+use App\Models\orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Exists;
+use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Component\CssSelector\Node\FunctionNode;
 
 class UserController extends Controller
@@ -83,13 +86,87 @@ class UserController extends Controller
     {
 
         $cart_items = cart::where("user_id", auth()->user()->id)->get();
-        return view('userFolder.checkout', compact("cart_items"));
+
+        $orders = orders::where("user_id", auth()->user()->id)->get();
+
+
+
+        $user_add = auth()->user();
+
+        foreach ($orders as $user) {
+            # code...
+            if ($user->bill) {
+                $user_add = $user->bill;
+            }
+        }
+
+
+
+
+
+
+        return view('userFolder.checkout', compact("cart_items", "user_add"));
+    }
+
+    public function checkoutKaro(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:3|max:30',
+            'contact_number' => 'required|numeric|min:10',
+            'email' => 'required|email',
+            'address' => 'required|min:5',
+            'country' => 'required',
+            'state' => 'required',
+            'pin_code' => 'required|max:6|min:6'
+        ]);
+
+
+
+
+
+        $cart_items = cart::where("user_id", auth()->user()->id)->get();
+
+        foreach ($cart_items as $cart) {
+            $create_order = new orders();
+
+            $create_order->user_id = auth()->user()->id;
+            $create_order->product_id = $cart->books->id;
+            $create_order->quantity = $cart->quantity;
+            $create_order->total_price = $cart->quantity * $cart->books->price;
+            $create_order->payment_method = $request['payment_method'];
+            $create_order->save();
+            $cart->delete();
+        }
+
+        $bill_add = new bill();
+
+        $bill_add->orders_id = $create_order->id;
+        $bill_add->name = $request['name'];
+        $bill_add->email = $request['email'];
+        $bill_add->address = $request['address'];
+        $bill_add->country = $request['country'];
+        $bill_add->contact = $request['contact_number'];
+        $bill_add->state = $request['state'];
+        $bill_add->pin_code = $request['pin_code'];
+        $bill_add->save();
+
+        return redirect()->route("user-profile");
     }
 
     public function userProfile()
     {
 
-        return view('userFolder.user_profile');
+        $orders = orders::where("user_id", auth()->user()->id)->get();
+
+        foreach ($orders as $order) {
+            # code...
+            echo $order->books;
+        }
+
+
+
+
+        return view('userFolder.user_profile', compact('orders'));
     }
 
     public function cart()

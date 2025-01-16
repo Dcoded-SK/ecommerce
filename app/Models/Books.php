@@ -20,4 +20,9 @@ class Books extends Model
     {
         return $this->belongsTo(Genre::class);
     }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Orders::class, 'books_orders');
+    }
 }
