@@ -281,7 +281,8 @@
                             <div class="col-md-3">
                                 <div class="product-item">
                                     <figure class="product-style">
-                                        <img src="{{ asset('books_picture/'. $book->picture) }}" alt="Books" class="product-item">
+
+                                        <img src="{{ asset('books_picture/'.$book->picture)}}" style="width: 300px;height:300px" alt="Books" class="product-item">
                                         <a href="/add-to-cart-{{ $book->id }}"> <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
                                                 Cart</button></a>
                                     </figure>

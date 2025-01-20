@@ -26,6 +26,8 @@ class UserController extends Controller
         }])
             ->whereHas("getBooks")
             ->get();
+
+
         return view('userFolder.index', compact('genres'));
     }
     public function addToCart($id)
@@ -120,27 +122,35 @@ class UserController extends Controller
             'pin_code' => 'required|max:6|min:6'
         ]);
 
-
-
-
-
         $cart_items = cart::where("user_id", auth()->user()->id)->get();
+        $order_ids = [];
 
         foreach ($cart_items as $cart) {
             $create_order = new orders();
 
+            // Create the order
             $create_order->user_id = auth()->user()->id;
-            $create_order->product_id = $cart->books->id;
             $create_order->quantity = $cart->quantity;
+            $create_order->book_id = $cart->books->id;
             $create_order->total_price = $cart->quantity * $cart->books->price;
             $create_order->payment_method = $request['payment_method'];
             $create_order->save();
+
+            // Attach the book to the order using the pivot table
+            $create_order->books()->attach($cart->books->id,);
+
+            // Collect the order ID for further use
+            $order_ids[] = $create_order->id;
+
+            // Delete the cart item
             $cart->delete();
         }
 
-        $bill_add = new bill();
+        // Get the latest order_id (or use the last created order)
+        $latest_order_id = max($order_ids);
 
-        $bill_add->orders_id = $create_order->id;
+        $bill_add = new bill();
+        $bill_add->order_id = $latest_order_id;
         $bill_add->name = $request['name'];
         $bill_add->email = $request['email'];
         $bill_add->address = $request['address'];
@@ -157,11 +167,6 @@ class UserController extends Controller
     {
 
         $orders = orders::where("user_id", auth()->user()->id)->get();
-
-        foreach ($orders as $order) {
-            # code...
-            echo $order->books;
-        }
 
 
 

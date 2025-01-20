@@ -11,12 +11,12 @@ class orders extends Model
 
     public function books()
     {
-        return $this->belongsToMany(Books::class, 'books_orders');
+        return $this->belongsToMany(Books::class, 'books_orders', 'order_id', 'book_id');
     }
 
 
     public function bill()
     {
-        return $this->hasOne(bill::class);
+        return $this->hasOne(bill::class, 'order_id');
     }
 }

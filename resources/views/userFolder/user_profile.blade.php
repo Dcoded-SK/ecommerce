@@ -98,31 +98,35 @@
                 </div>
             </div>
 
-            <div class="row gutters-sm scrollbar-hidden-y ">
+            <div class="row gutters-sm  ">
                 <div class="">
+                    <h3 class="text-center">Orders</h3>
                     <div class="card h-100">
-                        <div class="card-body">
-
+                        <div class="card-body scroller-hidden-y" style="height: 400px; overflow-y: auto;">
                             @foreach ($orders as $order )
-
                             @foreach ($order->books as $book )
-
-                            <div class="row">
-                                <div class="col-3 align-center">
-                                    <img src="{{ asset('books_picture/1736590794.jpg') }}" style="width:80px" alt="">
+                            <div class="card shadow mb-2">
+                                <div class="row p-3">
+                                    <div class="col-4 align-center">
+                                        <img src="{{ asset('books_picture/'.$book->picture) }}" style="width: 150px; height: 150px" alt="">
+                                    </div>
+                                    <div class="col-4 py-3">
+                                        <h5>Title: {{ $book->title }}</h5>
+                                        <h5>Author: {{ $book->author }}</h5>
+                                        <h5>Genre: {{ $book->genre->name }}</h5>
+                                        <h5>Quantity: {{ $order->quantity }}</h5>
+                                        <h5>Total price: {{ $order->quantity* $book->price }}</h5>
+                                    </div>
+                                    <div class="col-4 py-3">
+                                        <h5>Status: {{ $order->status=="pending"? 'On the way': 'Delivered'}}</h5>
+                                        <h5>Del. date: {{ $order->status=="delivered"? $oder->updated_at : 'Estimated date?'}}</h5>
+                                    </div>
                                 </div>
-                                <div class="col-3">
-                                    <h5>Title:{{ $book->title }}</h5>
-                                </div>
-                                <div class="col-3"></div>
-                                <div class="col-3"></div>
                             </div>
                             @endforeach
-
                             @endforeach
-
-
                         </div>
+
                     </div>
 
                 </div>

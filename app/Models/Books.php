@@ -23,6 +23,6 @@ class Books extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Orders::class, 'books_orders');
+        return $this->belongsToMany(Orders::class, 'books_orders', 'order_id', 'book_id');
     }
 }

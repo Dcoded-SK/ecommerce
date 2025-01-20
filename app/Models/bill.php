@@ -11,6 +11,6 @@ class bill extends Model
 
     public function orders()
     {
-        return $this->belongsTo(orders::class);
+        return $this->belongsTo(orders::class, 'order_id');
     }
 }

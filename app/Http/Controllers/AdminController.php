@@ -6,6 +6,7 @@ use App\Exports\GenreExport;
 use App\Imports\GenreImport;
 use App\Models\Books;
 use App\Models\Genre;
+use App\Models\orders;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,13 +14,14 @@ use PDO;
 use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role as ModelsRole;
+use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
     // to open home page
 
-    public function adminHome()
+    public function adminHome(Request $request)
     {
         // Fetch all roles with permissions
         $roles = ModelsRole::with('permissions')->get();
@@ -41,7 +43,25 @@ class AdminController extends Controller
 
 
         $books = Books::limit(3)->orderBy("created_at", "desc")->get();
+
+
+        $orders = orders::all();
+
+        if ($request->ajax()) {
+            return DataTables::of($orders)
+                ->setRowClass(function ($row) {
+                    return $row->status == "pending"
+                        ? 'alert-warning'
+                        : ($row->status == "cancel"
+                            ? 'alert-danger'
+                            : 'alert-success');
+                })
+                ->make(true);
+        }
+
+
         // Pass roles to the view
+
         return view('adminFolder.home', compact('roles', 'books'));
     }
 
@@ -188,7 +208,7 @@ class AdminController extends Controller
         $insert->save();
 
 
-        return redirect("admin-home")->with("success", "New books has been added");
+        return redirect("view-books")->with("success", "New books has been added");
     }
 
     // to show the books
@@ -198,5 +218,62 @@ class AdminController extends Controller
         $books = Books::orderBy("created_at", "asc")->paginate(3);
 
         return view("adminFolder.view_books", compact("books"));
+    }
+
+    // to edit orders status
+
+    public function confirmOrder(Request $request)
+    {
+
+        foreach ($request['order'] as $order) {
+            # code...
+
+            $c_ord = orders::where("id", $order)->first();
+
+            $c_ord->status = "confirm";
+            $c_ord->save();
+        }
+        return redirect()->back()->with("success", "Orders status updated successfully");
+    }
+
+    public function cancelOrder(Request $request)
+    {
+
+        foreach ($request['order'] as $order) {
+            # code...
+
+            $c_ord = orders::where("id", $order)->first();
+
+            $c_ord->status = "cancel";
+            $c_ord->save();
+        }
+        return redirect()->back()->with("success", "Orders status updated successfully");
+    }
+
+    public function deleteOrder(Request $request)
+    {
+
+        foreach ($request['order'] as $order) {
+            # code...
+
+            $c_ord = orders::where("id", $order)->delete();
+        }
+        return redirect()->back()->with("success", "Orders has been removed  successfully");
+    }
+
+    // to show a book
+
+    public function getBookDetails($id)
+    {
+        // Fetch the book by ID from the database
+        $book = Books::find($id);
+
+        // If the book exists, return it as JSON
+        if ($book) {
+            return response()->json(['book' => $book]);
+        }
+
+        // If not found, return a 404 error response
+        return response()->json(['error' => 'Book not found'], 404);
     }
 }

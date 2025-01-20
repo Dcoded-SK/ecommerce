@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>BookSaw - Free Book Store HTML CSS Template</title>
+    <title>BookSaw - Learn the best title </title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -371,7 +371,7 @@
 
                     <div class="col-md-2">
                         <div class="main-logo">
-                            <a href="index.html"><img src="images/main-logo.png" alt="logo"></a>
+                            <a href="/"><img src="images/main-logo.png" alt="logo"></a>
                         </div>
 
                     </div>
