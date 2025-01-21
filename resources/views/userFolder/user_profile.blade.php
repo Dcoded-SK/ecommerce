@@ -100,9 +100,10 @@
 
             <div class="row gutters-sm  ">
                 <div class="">
-                    <h3 class="text-center">Orders</h3>
-                    <div class="card h-100">
-                        <div class="card-body scroller-hidden-y" style="height: 400px; overflow-y: auto;">
+                    <div class="card h-350">
+                        <h3 class="text-center">Orders</h3>
+
+                        <div class="card-body scroller-hidden-y" style="max-height: 400px; overflow-y: auto;">
                             @foreach ($orders as $order )
                             @foreach ($order->books as $book )
                             <div class="card shadow mb-2">

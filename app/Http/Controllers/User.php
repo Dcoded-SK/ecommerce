@@ -57,19 +57,25 @@ class User extends Controller
             // Respond based on role
             switch ($user->role) {
                 case 'user':
+                    $user->assignRole('user');
                     return response()->json([
                         'message' => $welcomeMessage,
+
                         'redirect' => '/user-home',
                     ]);
                 case 'admin':
+                    $user->assignRole('admin');
+
                     return response()->json([
                         'message' => $welcomeMessage,
                         'redirect' => '/admin-home',
                     ]);
-                case 'seller':
+                case 'supplier':
+                    $user->assignRole('supplier');
+
                     return response()->json([
                         'message' => $welcomeMessage,
-                        'redirect' => '/seller-home',
+                        'redirect' => '/supplier-home',
                     ]);
             }
         }
@@ -83,6 +89,11 @@ class User extends Controller
     public function profile()
     {
         return view("adminFolder.profile");
+    }
+
+    public function supplierProfile()
+    {
+        return view('supplierFolder.profile');
     }
 
     public function logout()

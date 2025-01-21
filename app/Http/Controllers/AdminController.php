@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Exports\GenreExport;
 use App\Imports\GenreImport;
+use App\Mail\OrderRegardMail;
 use App\Models\Books;
 use App\Models\Genre;
 use App\Models\orders;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use PDO;
 use Spatie\Permission\Contracts\Role;
@@ -232,6 +234,19 @@ class AdminController extends Controller
 
             $c_ord->status = "confirm";
             $c_ord->save();
+
+
+            $user = User::where("id", $c_ord->user_id)->first();
+
+            // // Prepare email data
+            $data = [
+                'subject' => 'Order Confirmation regard',
+                'name' => $user->name, // Replace with dynamic user name if available
+                'message' => 'Your order has been confirmed',
+            ];
+
+            // Send the cancellation email
+            Mail::to($user->email)->send(new OrderRegardMail($data));
         }
         return redirect()->back()->with("success", "Orders status updated successfully");
     }
@@ -239,27 +254,60 @@ class AdminController extends Controller
     public function cancelOrder(Request $request)
     {
 
+        $reason = $request->input('reason'); // Retrieve the reason
+
         foreach ($request['order'] as $order) {
             # code...
+
 
             $c_ord = orders::where("id", $order)->first();
 
             $c_ord->status = "cancel";
             $c_ord->save();
+
+            $user = User::where("id", $c_ord->user_id)->first();
+
+            // // Prepare email data
+            $data = [
+                'subject' => 'Order Cancellation regard',
+                'name' => $user->name, // Replace with dynamic user name if available
+                'message' => $reason,
+            ];
+
+            // Send the cancellation email
+            Mail::to($user->email)->send(new OrderRegardMail($data));
         }
         return redirect()->back()->with("success", "Orders status updated successfully");
     }
 
-    public function deleteOrder(Request $request)
-    {
+    // public function deleteOrder(Request $request)
+    // {
 
-        foreach ($request['order'] as $order) {
-            # code...
+    //     $reason = $request->input('reason'); // Retrieve the reason
 
-            $c_ord = orders::where("id", $order)->delete();
-        }
-        return redirect()->back()->with("success", "Orders has been removed  successfully");
-    }
+    //     foreach ($request['order'] as $order) {
+    //         # code...
+
+
+    //         $c_ord = orders::where("id", $order)->first();
+
+
+
+    //         $user = User::where("id", $c_ord->user_id)->first();
+
+    //         $c_ord->delete();
+    //         // // Prepare email data
+    //         $data = [
+    //             'subject' => 'Order Cancellation regard',
+    //             'name' => $user->name, // Replace with dynamic user name if available
+    //             'message' => $reason,
+    //         ];
+
+    //         // Send the cancellation email
+    //         Mail::to('skohar098@rku.ac.in')->send(new OrderRegardMail($data));
+    //     }
+    //     return redirect()->back()->with("success", "Orders has been removed  successfully");
+    // }
 
     // to show a book
 

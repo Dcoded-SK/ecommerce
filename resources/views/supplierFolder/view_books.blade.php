@@ -1,13 +1,13 @@
-@extends("adminFolder.admin_master")
+@extends("supplierFolder.supplier_master")
 
 @section("content")
 
 <div class="container">
 
-    <a href="/add-book">
+    <a href="/supplier-add-book">
         <div class="btn btn-primary m-2">+ Book</div>
     </a>
-    <div class="col-8 card shadow border p-3 my-4">
+    <div class="col-8 card shadow border p-3 my-4" style="max-height:600px;overflow-y:auto">
         <h3 class="text-center">Books</h3>
         <table class="table table-light table-hover table-striped">
             <thead>
@@ -15,28 +15,24 @@
                     <th class="text-center">SN.</th>
                     <th class="text-center">Picture</th>
                     <th class="text-center">Title</th>
-                    <th class="text-center">Supplier</th>
                     <th class="text-center">Author</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($books as $book)
                 <tr onclick="showBook({{ $book->id }})">
-                    <td>{{ $books->firstItem() + $loop->index }}</td>
+                    <td>{{$loop->iteration }}</td>
                     <td class="text-center">
                         <img class="img" src="{{ asset('books_picture/' . $book->picture) }}" alt="Book Picture">
                     </td>
                     <td class="text-center">{{ $book->title }}</td>
-                    <td class="text-center">{{ App\Models\User::where("id",$book->supplier_id)->value('name') }}</td>
                     <td class="text-center">{{ $book->author }}</td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <div class="d-flex justify-content-center mt-3">
-            {{ $books->links() }}
-        </div>
+
 
     </div>
 </div>

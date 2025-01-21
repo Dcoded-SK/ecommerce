@@ -44,7 +44,7 @@
 
     <div class="container-fluid">
         <div class="row header">
-            @include('adminFolder.header')
+            @include('supplierFolder.header')
         </div>
 
 
@@ -70,7 +70,7 @@
         <div class="row bg-secondary">
             <!-- Sidebar -->
             <div class="col-2 side_header" style="border-right:3px white solid;min-height:93vh" aria-label="Sidebar">
-                @include('adminFolder.side_header')
+                @include('supplierFolder.side_header')
             </div>
             <!-- Main Content -->
             <div class="col-10 bg-light" aria-label="Main Content">
@@ -99,148 +99,33 @@
 
     <script>
         $(document).ready(function() {
-            $('#customertable').DataTable({
-                processing: true
-                , serverSide: true
-                , ajax: {
-                    url: '{{route("view_customers")}}'
-                    , type: 'GET'
-                    , headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                }
-                , columns: [{
-                    data: 'name'
-                    , name: 'name'
-                }, {
-                    data: 'email'
-                    , name: 'email'
-                }, {
-                    data: 'role'
-                    , name: 'role'
-                }]
-            });
-
-
-            // to show suppliers
-
-
-            $('#suppliertable').DataTable({
-                processing: true
-                , serverSide: true
-                , ajax: {
-                    url: '{{route("view_suppliers")}}'
-                    , type: 'GET'
-                    , headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                }
-                , columns: [{
-                    data: 'name'
-                    , name: 'name'
-                }, {
-                    data: 'email'
-                    , name: 'email'
-                }, {
-                    data: 'role'
-                    , name: 'role'
-                }]
-            });
-
-
-            // to show the admin list
-
-            $('#admintable').DataTable({
-                processing: true
-                , serverSide: true
-                , ajax: {
-                    url: '{{route("view_admins")}}'
-                    , type: 'GET'
-                    , headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                }
-                , columns: [{
-                    data: 'name'
-                    , name: 'name'
-                }, {
-                    data: 'email'
-                    , name: 'email'
-                }, {
-                    data: 'role'
-                    , name: 'role'
-                }]
-            });
-
-
-            // to show all the genre of books
-            $('#genretable').DataTable({
-                processing: true
-                , serverSide: true
-                , responsive: true, // Makes the table responsive
-                ajax: {
-                    url: '{{ route("view_genre") }}'
-                    , type: 'GET'
-                    , headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    , }
-                    , error: function(xhr, error, code) {
-                        console.error('Error fetching data:', error);
-                    }
-                , }
-                , columns: [{
-                        data: 'id'
-                        , name: 'id'
-                    }
-                    , {
-                        data: 'name'
-                        , name: 'name'
-                    }
-                    , {
-                        data: 'created_at'
-                        , name: 'created_at'
-                        , render: function(data, type, row) {
-                            return moment(data).format('YYYY-MM-DD HH:mm:ss'); // Format the date
-                        }
-                    }
-                , ]
-                , lengthChange: true, // Allows changing the number of rows displayed
-                searching: true, // Enables the search bar
-                ordering: true, // Enables column-based ordering
-            });
-
-
-            // to show orders 
-
-
             const selectAllCheckbox = document.getElementById('selectAll');
             const confirmButton = document.getElementById('confirmButton');
             const cancelButton = document.getElementById('cancelButton');
             const editOrderForm = document.getElementById('editorder');
 
-
-
-            // Initialize DataTable
             const table = $('#order_table').DataTable({
                 processing: true
                 , serverSide: true
-                , responsive: true, // Makes the table responsive
-                ajax: {
-                    url: '{{ route("admin-home") }}'
+                , responsive: true
+                , ajax: {
+                    url: '{{ route("supplier-home") }}'
                     , type: 'GET'
                     , headers: {
                         'X-Requested-With': 'XMLHttpRequest'
-                    }
+                        , 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    , }
                     , error: function(xhr, error, code) {
                         console.error('Error fetching data:', error);
+                        Swal.fire('Error!', 'Failed to load data from server.', 'error');
                     }
-                }
+                , }
                 , columns: [{
                         data: null
-                        , render: function(data, type, row, meta) {
+                        , render: function(data, type, row) {
                             return `<input type="checkbox" name="order[]" value="${row.id}" class="order-checkbox" />`;
                         }
-                    }
+                    , }
                     , {
                         data: 'id'
                         , name: 'order_id'
@@ -248,11 +133,10 @@
                     , {
                         data: 'book_id'
                         , name: 'book_id'
-                        , render: function(data, type, row, meta) {
-
+                        , render: function(data) {
                             return `<a href="javascript:void(0)" style="text-decoration:none;color:black" onclick="showBook(${data})">${data}</a>`;
                         }
-                    }
+                    , }
                     , {
                         data: 'quantity'
                         , name: 'quantity'
@@ -269,52 +153,43 @@
                         data: 'created_at'
                         , name: 'created_at'
                         , render: function(data) {
-                            return moment(data).format('D-M-Y HH:mm'); // Format the date
+                            return moment(data).format('D-M-Y HH:mm');
                         }
-                    }
-                ]
-                , lengthChange: true, // Allows changing the number of rows displayed
-                searching: true, // Enables the search bar
-                ordering: true, // Enables column-based ordering
+                    , }
+                , ]
+                , lengthChange: true
+                , searching: true
+                , ordering: true
+            , });
 
-
-            });
-
-            // Show or hide buttons based on selected checkboxes
             function toggleButtons() {
                 const anyChecked = $('input.order-checkbox:checked').length > 0;
                 confirmButton.style.display = anyChecked ? 'inline-block' : 'none';
                 cancelButton.style.display = anyChecked ? 'inline-block' : 'none';
-
-
             }
 
-            // Update the "Select All" checkbox state
             function updateSelectAllCheckbox() {
-                const allChecked = $('input.order-checkbox:checked').length === $('input.order-checkbox').length;
+                const allChecked =
+                    $('input.order-checkbox:checked').length ===
+                    $('input.order-checkbox').length;
                 selectAllCheckbox.checked = allChecked;
             }
 
-            // Handle the "Select All" checkbox change event
             selectAllCheckbox.addEventListener('change', function(e) {
                 const isChecked = e.target.checked;
-                $('input.order-checkbox').prop('checked', isChecked); // Check/uncheck all checkboxes
+                $('input.order-checkbox').prop('checked', isChecked);
                 toggleButtons();
             });
 
-            // Handle row checkbox change event
             $('#order_table').on('change', '.order-checkbox', function() {
                 toggleButtons();
                 updateSelectAllCheckbox();
             });
 
-            // Submit form to a specific route
-            function submitFormOrder(route) {
-                editOrderForm = document.getElementById("editorder");
-                editOrderForm.action = route; // Set form action dynamically
-                editOrderForm.submit(); // Submit the form
-            }
-
+            window.submitFormOrder = function(route) {
+                editOrderForm.action = route;
+                editOrderForm.submit();
+            };
         });
 
 
@@ -388,9 +263,7 @@
             }
         }
 
-        function newGenre() {
-            $('#genreform').show();
-        }
+
 
         //to  show a product on admin panel
 
@@ -408,7 +281,6 @@
 
                 <p class="px-3"><strong>Title:</strong> ${book.title}</p>
                 <p class="px-3"><strong>Author:</strong> ${book.author}</p>
-
                 <p class="px-3"><strong>Price:</strong> $${book.price}</p>
             `;
                     // Insert the content into the modal body

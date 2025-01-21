@@ -1,6 +1,6 @@
     <div class="col-2 " style="border-right:3px white solid">
 
-        <a href="admin-home" style="text-decoration: none;">
+        <a href="supplier-home" style="text-decoration: none;">
             <h3>Home</h3>
         </a>
 
@@ -15,7 +15,7 @@
                 <h3 class="text-center">Management is the best skill! ({{ Auth::user()->name }})</h3>
             </div>
             <div class="col-4 ">
-                <a href="/profile">
+                <a href="/supplier-profile">
                     <h5 class="m-2 text-end"><img src="{{ asset('images/defaultuser.png') }}" alt=""></h5>
                 </a>
             </div>

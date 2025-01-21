@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\firstController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,7 @@ Route::post("new-user", [User::class, "addNewUser"])->name("new-user");
 
 Route::middleware(['checkUser'])->group(function () {
 
+
     Route::middleware(['checkRole:admin'])->group(function () {
 
         Route::controller(AdminController::class)->group(function () {
@@ -56,8 +58,7 @@ Route::middleware(['checkUser'])->group(function () {
             Route::get('/admin-home', 'adminHome')->name('admin-home')->middleware("checkUser");
 
             // Route to show the 'add book' view
-            Route::get('add-book', 'addBookView')->middleware('checkPermission:add_books');
-            Route::post('add-book', 'addBookMethod')->middleware("checkPermission:add_books");
+
             Route::get('view-books', 'viewBooks');
 
             // Route to view customers (using the viewCustomers method of AdminController)
@@ -84,11 +85,7 @@ Route::middleware(['checkUser'])->group(function () {
             Route::get('assign-permissions-{role}', 'assignPermissionsView');
             Route::post('assign-permission', 'assignPermissionsMethod');
 
-            // Route to edit order status
 
-            Route::post('confirm-order', [AdminController::class, 'confirmOrder']);
-            Route::post('cancel-order', [AdminController::class, 'cancelOrder']);
-            Route::post('remove-order', [AdminController::class, 'deleteOrder']);
 
 
             // To show a book
@@ -96,6 +93,43 @@ Route::middleware(['checkUser'])->group(function () {
             Route::get('/get-book-details/{id}', [AdminController::class, 'getBookDetails']);
         });
     });
+
+    Route::middleware(['checkRole:supplier'])->group(function () {
+
+        // to show supplier home
+        Route::get('/supplier-home', [SupplierController::class, 'supplierHome'])->name('supplier-home');
+
+        // to show profile
+
+        Route::get('supplier-profile', [User::class, 'supplierProfile'])->name('supplier-profile');
+
+        // to add new book
+        Route::get('supplier-add-book', [SupplierController::class, 'addBookView'])->middleware('checkPermission:add_books');
+        Route::post('supplier-add-book', [SupplierController::class, 'addBookMethod'])->middleware("checkPermission:add_books");
+
+        // // to show book on supplier
+        Route::get('supplier-view-books', [SupplierController::class, 'viewBooks'])->middleware("checkPermission:view_products");
+
+
+
+
+        // Route to edit order status
+
+        Route::post('confirm-order', [SupplierController::class, 'confirmOrder']);
+        Route::post('cancel-order', [SupplierController::class, 'cancelOrder']);
+
+        // // Route to view genre (using the viewGenre method of AdminController)
+        // Route::get('/view-genre', 'viewGenre')->name('view_genre')->middleware('checkPermission:add_genre');
+
+        // // Route to handle adding a new genre (using the newGenre method of AdminController)
+        // Route::post('/addgenre', 'newGenre');
+
+        // // Route to export genre
+
+        // Route::get('export-genre', 'exportGenre');
+    });
+
+
 
 
     // this is for user related routes

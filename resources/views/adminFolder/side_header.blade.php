@@ -21,7 +21,7 @@
     </ul>
 </div>
 
-<div class="dropdown mt-3">
+{{-- <div class="dropdown mt-3">
     <button class="btn btn-light dropdown-toggle side_btn form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Orders
     </button>
@@ -30,7 +30,7 @@
         <li><a class="dropdown-item" href="/view-past-orders">Past Orders</a></li>
         <li><a class="dropdown-item" href="/view-cancel-orders">Cancelled Orders</a></li>
     </ul>
-</div>
+</div> --}}
 
 <div class="dropdown mt-3">
     <button class="btn btn-light dropdown-toggle side_btn form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">

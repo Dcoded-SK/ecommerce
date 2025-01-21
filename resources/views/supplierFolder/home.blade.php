@@ -1,4 +1,4 @@
-@extends('adminFolder.admin_master')
+@extends('supplierFolder.supplier_master')
 
 
 @section('content')
@@ -61,7 +61,6 @@
                 <th class="text-center">SN.</th>
                 <th class="text-center">Picture</th>
                 <th class="text-center">Title</th>
-                <th class="text-center">Supplier</th>
                 <th class="text-center">Author</th>
             </thead>
             <tbody>
@@ -72,14 +71,13 @@
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td class="text-center"><img class="img" src="{{ asset('books_picture/' . $book->picture) }}" alt="Book Picture"></td>
                     <td class="text-center">{{ $book->title }}</td>
-                    <td class="text-center">{{ App\Models\User::where("id",$book->supplier_id)->first()->value('name') }}</td>
                     <td class="text-center">{{ $book->author }}</td>
                 </tr>
 
                 @endforeach
             </tbody>
         </table>
-        <a href="/view-books" style="text-decoration: none">
+        <a href="/supplier-view-books" style="text-decoration: none">
             <div class="btn">All Books</div>
         </a>
 
@@ -166,33 +164,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-4 col-4 card shadow border p-3">
-        <h3 class="text-center">Roles</h3>
-        <table class="table table-success table-hover table-striped table-responsive">
-            <thead>
-                <th>SN.</th>
-                <th>Role</th>
-                <th>Permissions</th>
-            </thead>
-            <tbody>
-                @foreach($roles as $role)
-                <tr onclick="window.location.href='/assign-permissions-{{ $role->name}}'" style="cursor: pointer">
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $role->name }}</td>
-                    <td>
-                        @if($role->permissions->isNotEmpty())
-                        {{ $role->permissions->pluck('name')->join(', ') }}
-                        @else
-                        No permissions assigned
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
 
-            </tbody>
-        </table>
-
-    </div>
 </div>
 
 
