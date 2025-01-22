@@ -186,16 +186,52 @@
                 updateSelectAllCheckbox();
             });
 
-            window.submitFormOrder = function(route) {
-                editOrderForm.action = route;
-                editOrderForm.submit();
-            };
+            // window.submitFormOrder = function(route) {
+            //     editOrderForm.action = route;
+            //     editOrderForm.submit();
+            // };
         });
+
+
+
+
+
+        //to  show a product on admin panel
+
+        // This function will be triggered when a row is clicked
+        function showBook(bookId) {
+            // You can use AJAX to fetch book details by ID from the server
+            $.ajax({
+                url: '/get-book-details/' + bookId, // Make sure to set the correct route for fetching book details
+                method: 'GET'
+                , success: function(response) {
+                    // Dynamically populate the modal with the book details
+                    var book = response.book; // Assuming 'book' is the returned object
+                    var modalContent = `
+                <img  src="{{ asset('books_picture/') }}/${book.picture}" style="width:250px;height:250px" alt="Book Image" class="img-fluid" />
+
+                <p class="px-3"><strong>Title:</strong> ${book.title}</p>
+                <p class="px-3"><strong>Author:</strong> ${book.author}</p>
+                <p class="px-3"><strong>Price:</strong> $${book.price}</p>
+            `;
+                    // Insert the content into the modal body
+                    $('#bookDetailsContent').html(modalContent);
+
+                    // Open the modal
+                    $('#bookDetailsModal').modal('show');
+                }
+                , error: function(xhr, status, error) {
+                    console.error("Error fetching book details:", error);
+                }
+            });
+        }
 
 
         // Submit form to a specific route
         function submitFormOrder(route) {
-            if (route !== "/confirm-order") {
+
+
+            if (route !== "/supplier-confirm-order") {
                 Swal.fire({
                     title: 'Reason!'
                     , input: 'text', // Input type (e.g., text, number, email, etc.)
@@ -229,7 +265,7 @@
                             processData: false, // Prevents jQuery from processing the data
                             contentType: false, // Prevents jQuery from setting the content type
                             success: function(response) {
-                                window.location.href = "/admin-home";
+                                window.location.href = "/supplier-home";
                             }
                             , error: function(xhr, status, error) {
                                 console.error('Error:', error);
@@ -253,7 +289,7 @@
                     processData: false, // Prevents jQuery from processing the data
                     contentType: false, // Prevents jQuery from setting the content type
                     success: function(response) {
-                        window.location.href = "/admin-home";
+                        window.location.href = "/supplier-home";
                     }
                     , error: function(xhr, status, error) {
                         console.error('Error:', error);
@@ -261,38 +297,6 @@
                     }
                 });
             }
-        }
-
-
-
-        //to  show a product on admin panel
-
-        // This function will be triggered when a row is clicked
-        function showBook(bookId) {
-            // You can use AJAX to fetch book details by ID from the server
-            $.ajax({
-                url: '/get-book-details/' + bookId, // Make sure to set the correct route for fetching book details
-                method: 'GET'
-                , success: function(response) {
-                    // Dynamically populate the modal with the book details
-                    var book = response.book; // Assuming 'book' is the returned object
-                    var modalContent = `
-                <img  src="{{ asset('books_picture/') }}/${book.picture}" style="width:250px;height:250px" alt="Book Image" class="img-fluid" />
-
-                <p class="px-3"><strong>Title:</strong> ${book.title}</p>
-                <p class="px-3"><strong>Author:</strong> ${book.author}</p>
-                <p class="px-3"><strong>Price:</strong> $${book.price}</p>
-            `;
-                    // Insert the content into the modal body
-                    $('#bookDetailsContent').html(modalContent);
-
-                    // Open the modal
-                    $('#bookDetailsModal').modal('show');
-                }
-                , error: function(xhr, status, error) {
-                    console.error("Error fetching book details:", error);
-                }
-            });
         }
 
     </script>

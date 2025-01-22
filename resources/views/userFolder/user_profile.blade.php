@@ -104,7 +104,9 @@
                         <h3 class="text-center">Orders</h3>
 
                         <div class="card-body scroller-hidden-y" style="max-height: 400px; overflow-y: auto;">
+                            @if ($orders->isNotEmpty())
                             @foreach ($orders as $order )
+
                             @foreach ($order->books as $book )
                             <div class="card shadow mb-2">
                                 <div class="row p-3">
@@ -119,13 +121,21 @@
                                         <h5>Total price: {{ $order->quantity* $book->price }}</h5>
                                     </div>
                                     <div class="col-4 py-3">
-                                        <h5>Status: {{ $order->status=="pending"? 'On the way': 'Delivered'}}</h5>
+                                        <h5>Status: {{ $order->status=="pending"? 'On the way':( $order->status=="confirm"?'Confirm': 'Cancelled')}}</h5>
                                         <h5>Del. date: {{ $order->status=="delivered"? $oder->updated_at : 'Estimated date?'}}</h5>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                             @endforeach
+                            @else
+                            <h5 class="text-center mx-2">You have not shop yet! </h5>
+
+                            <a href="/#popular-books">
+                                <p class="text-center" style="font-style: bold;font-size:20px;color:rgb(110, 206, 110)">Shop Now</p>
+                            </a>
+                            @endif
+
                         </div>
 
                     </div>

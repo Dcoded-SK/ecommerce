@@ -86,6 +86,10 @@ Route::middleware(['checkUser'])->group(function () {
             Route::post('assign-permission', 'assignPermissionsMethod');
 
 
+            // Route to edit order status
+
+            Route::post('confirm-order', [AdminController::class, 'confirmOrder']);
+            Route::post('cancel-order', [AdminController::class, 'cancelOrder']);
 
 
             // To show a book
@@ -115,8 +119,8 @@ Route::middleware(['checkUser'])->group(function () {
 
         // Route to edit order status
 
-        Route::post('confirm-order', [SupplierController::class, 'confirmOrder']);
-        Route::post('cancel-order', [SupplierController::class, 'cancelOrder']);
+        Route::post('supplier-confirm-order', [SupplierController::class, 'supplierConfirmOrder']);
+        Route::post('supplier-cancel-order', [SupplierController::class, 'supplierCancelOrder']);
 
         // // Route to view genre (using the viewGenre method of AdminController)
         // Route::get('/view-genre', 'viewGenre')->name('view_genre')->middleware('checkPermission:add_genre');

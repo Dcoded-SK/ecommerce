@@ -27,8 +27,9 @@ class UserController extends Controller
             ->whereHas("getBooks")
             ->get();
 
+        $mostOrderedBook = Books::withCount("orders")->orderBy("orders_count", "desc")->first();
 
-        return view('userFolder.index', compact('genres'));
+        return view('userFolder.index', compact('genres', 'mostOrderedBook'));
     }
     public function addToCart($id)
     {
@@ -137,7 +138,7 @@ class UserController extends Controller
             $create_order->save();
 
             // Attach the book to the order using the pivot table
-            $create_order->books()->attach($cart->books->id,);
+            $create_order->books()->attach($cart->books->id);
 
             // Collect the order ID for further use
             $order_ids[] = $create_order->id;

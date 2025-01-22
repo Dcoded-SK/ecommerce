@@ -12,26 +12,21 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
-use PDO;
 use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role as ModelsRole;
-use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
-    // to open home page
-
+    // Open the admin home page
     public function adminHome(Request $request)
     {
-        // Fetch all roles with permissions
-        $roles = ModelsRole::with('permissions')->get();
+        $roles = ModelsRole::with('permissions')->get(); // Fetch all roles with permissions
 
-        // Retrieve users and assign roles based on the 'role' column
-        $users = User::all();  // Get all users
+        // Sync roles for users based on the 'role' column
+        $users = User::all();
         foreach ($users as $user) {
-            // Sync the role based on the 'role' column
             if ($user->role == 'user') {
                 $user->syncRoles(['user']);
             } elseif ($user->role == 'supplier') {
@@ -41,14 +36,15 @@ class AdminController extends Controller
             }
         }
 
+        // Grant all permissions to the admin role
         ModelsRole::where("name", "admin")->first()->syncPermissions(Permission::all());
 
-
+        // Fetch the latest 3 books
         $books = Books::limit(3)->orderBy("created_at", "desc")->get();
-
 
         $orders = orders::all();
 
+        // Return data in JSON format for AJAX requests
         if ($request->ajax()) {
             return DataTables::of($orders)
                 ->setRowClass(function ($row) {
@@ -61,127 +57,97 @@ class AdminController extends Controller
                 ->make(true);
         }
 
-
-        // Pass roles to the view
-
         return view('adminFolder.home', compact('roles', 'books'));
     }
 
-
-
-
-    // to return customers list
+    // Display customers list
     public function viewCustomers(Request $request)
     {
         if ($request->ajax()) {
-            $customers = User::where("role", "user")->get(); // Fetch only required columns
-            return DataTables::of($customers)->make(true); // Return JSON response for DataTables
+            $customers = User::where("role", "user")->get();
+            return DataTables::of($customers)->make(true);
         }
 
-        return view("adminFolder.viewCustomer"); // Load the Blade view for non-AJAX requests
+        return view("adminFolder.viewCustomer");
     }
 
-    // to return suppliers list
+    // Display suppliers list
     public function viewSuppliers(Request $request)
     {
-
-
         if ($request->ajax()) {
-            $customers = User::where("role", "supplier")->get(); // Fetch only required columns
-            return DataTables::of($customers)->make(true); // Return JSON response for DataTables
+            $customers = User::where("role", "supplier")->get();
+            return DataTables::of($customers)->make(true);
         }
 
-        return view("adminFolder.viewSupplier"); // Load the Blade view for non-AJAX requests
+        return view("adminFolder.viewSupplier");
     }
 
+    // Display admins list
     public function viewAdmins(Request $request)
     {
         if ($request->ajax()) {
-
-            $customers = User::where("role", "admin")->get(); // Fetch only required columns
-            return DataTables::of($customers)->make(true); // Return JSON response for DataTables
+            $customers = User::where("role", "admin")->get();
+            return DataTables::of($customers)->make(true);
         }
 
         return view("adminFolder.viewAdmin");
     }
 
-
-
-    // to show categoris
-
+    // Display genres
     public function viewGenre(Request $request)
     {
-
         if ($request->ajax()) {
-
             $genre = Genre::query();
-
             return DataTables::of($genre)->make(true);
         }
         return view("adminFolder.viewGenre");
     }
 
-    // to add new genres using export
-
+    // Add new genres using import
     public function newGenre(Request $request)
     {
         $request->validate([
             'genres' => 'required|mimes:xlsx,xls,html'
         ]);
 
-
         Excel::import(new GenreImport, $request['genres']);
 
-        return redirect()->back()->with("success", "Genre has be recored");
+        return redirect()->back()->with("success", "Genre has been recorded");
     }
 
-
-    // to download genre list
+    // Export the genre list
     public function exportGenre()
     {
-
-
         return Excel::download(new GenreExport, "Genre.xlsx");
     }
 
-
-    // to assing permission to route
-
+    // Assign permissions view
     public function assignPermissionsView($role)
     {
-
         $role = ModelsRole::where("name", $role)->first();
-
         $permissions = $role->permissions;
-        $role = $role->name;
-
         $all_permissions = Permission::all();
-
-
 
         return view("adminFolder.assing_permission_roles", compact("permissions", "role", "all_permissions"));
     }
 
+    // Assign permissions to a role
     public function assignPermissionsMethod(Request $request)
     {
-
         $role = ModelsRole::where("name", $request->role)->first();
-
         $role->syncPermissions($request->permissions);
 
-        return redirect()->back()->with("success", "Permission assign permission successfully");
+        return redirect()->back()->with("success", "Permissions assigned successfully");
     }
 
-    // to add books
-
+    // Show the form to add a book
     public function addBookView()
     {
-
         $genre = Genre::all();
-
         return view("adminFolder.add_book", compact("genre"));
     }
 
+    // Add a new book
     public function addBookMethod(Request $request)
     {
         $request->validate([
@@ -190,18 +156,13 @@ class AdminController extends Controller
             'genre' => 'required',
             'picture' => 'required|mimes:png,jpg,webp',
             'price' => 'required|'
-
         ]);
 
         $image = $request->picture;
         $imageName = time() . '.' . $image->getClientOriginalExtension();
-
-        // Move the file to the 'public/books_picture' directory
         $image->move(public_path('books_picture'), $imageName);
 
-
         $insert = new Books();
-
         $insert->title = $request['title'];
         $insert->author = $request['author'];
         $insert->genre_id = $request['genre'];
@@ -209,51 +170,40 @@ class AdminController extends Controller
         $insert->price = $request['price'];
         $insert->save();
 
-
-        return redirect("view-books")->with("success", "New books has been added");
+        return redirect("view-books")->with("success", "New book has been added");
     }
 
-    // to show the books
-
+    // Show the list of books
     public function viewBooks()
     {
         $books = Books::orderBy("created_at", "asc")->paginate(3);
-
         return view("adminFolder.view_books", compact("books"));
     }
 
-    // to edit orders status
-
+    // Confirm order status and send email
     public function confirmOrder(Request $request)
     {
-
         foreach ($request['order'] as $order) {
-            # code...
-
             $c_ord = orders::where("id", $order)->first();
-
             $c_ord->status = "confirm";
             $c_ord->save();
 
-
             $user = User::where("id", $c_ord->user_id)->first();
 
-            // // Prepare email data
             $data = [
                 'subject' => 'Order Confirmation regard',
-                'name' => $user->name, // Replace with dynamic user name if available
+                'name' => $user->name,
                 'message' => 'Your order has been confirmed',
             ];
 
-            // Send the cancellation email
             Mail::to($user->email)->send(new OrderRegardMail($data));
         }
-        return redirect()->back()->with("success", "Orders status updated successfully");
+        return redirect()->back()->with("success", "Order status updated successfully");
     }
 
+    // Cancel order and send email with reason
     public function cancelOrder(Request $request)
     {
-
         $reason = $request->input('reason'); // Retrieve the reason
 
         foreach ($request['order'] as $order) {
@@ -263,9 +213,11 @@ class AdminController extends Controller
             $c_ord = orders::where("id", $order)->first();
 
             $c_ord->status = "cancel";
-            $c_ord->save();
 
             $user = User::where("id", $c_ord->user_id)->first();
+
+            $c_ord->save();
+
 
             // // Prepare email data
             $data = [
@@ -280,48 +232,14 @@ class AdminController extends Controller
         return redirect()->back()->with("success", "Orders status updated successfully");
     }
 
-    // public function deleteOrder(Request $request)
-    // {
-
-    //     $reason = $request->input('reason'); // Retrieve the reason
-
-    //     foreach ($request['order'] as $order) {
-    //         # code...
-
-
-    //         $c_ord = orders::where("id", $order)->first();
-
-
-
-    //         $user = User::where("id", $c_ord->user_id)->first();
-
-    //         $c_ord->delete();
-    //         // // Prepare email data
-    //         $data = [
-    //             'subject' => 'Order Cancellation regard',
-    //             'name' => $user->name, // Replace with dynamic user name if available
-    //             'message' => $reason,
-    //         ];
-
-    //         // Send the cancellation email
-    //         Mail::to('skohar098@rku.ac.in')->send(new OrderRegardMail($data));
-    //     }
-    //     return redirect()->back()->with("success", "Orders has been removed  successfully");
-    // }
-
-    // to show a book
-
+    // Get book details by ID
     public function getBookDetails($id)
     {
-        // Fetch the book by ID from the database
         $book = Books::find($id);
-
-        // If the book exists, return it as JSON
         if ($book) {
             return response()->json(['book' => $book]);
         }
 
-        // If not found, return a 404 error response
         return response()->json(['error' => 'Book not found'], 404);
     }
 }

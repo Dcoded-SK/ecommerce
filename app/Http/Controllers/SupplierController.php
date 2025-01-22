@@ -80,7 +80,7 @@ class SupplierController extends Controller
 
     // to edit orders status
 
-    public function confirmOrder(Request $request)
+    public function supplierConfirmOrder(Request $request)
     {
 
         foreach ($request['order'] as $order) {
@@ -104,10 +104,10 @@ class SupplierController extends Controller
             // Send the cancellation email
             Mail::to($user->email)->send(new OrderRegardMail($data));
         }
-        return redirect()->back()->with("success", "Orders status updated successfully");
+        return redirect()->route("supplier-home")->with("success", "Orders status updated successfully");
     }
 
-    public function cancelOrder(Request $request)
+    public function supplierCancelOrder(Request $request)
     {
 
         $reason = $request->input('reason'); // Retrieve the reason
@@ -135,6 +135,6 @@ class SupplierController extends Controller
             // Send the cancellation email
             Mail::to($user->email)->send(new OrderRegardMail($data));
         }
-        return redirect()->back()->with("success", "Orders status updated successfully");
+        return redirect()->route("supplier-home")->with("success", "Orders status updated successfully");
     }
 }

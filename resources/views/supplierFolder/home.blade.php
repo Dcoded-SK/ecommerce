@@ -9,12 +9,12 @@
         <h3 class="text-center mx-3">Recent Orders</h3>
         <div class="row">
             <div class="col-2">
-                <div class="btn btn-primary text-center my-2" id="confirmButton" style="display:none;" onclick="submitFormOrder('/confirm-order')">
+                <div class="btn btn-primary text-center my-2" id="confirmButton" style="display:none;" onclick="submitFormOrder('/supplier-confirm-order')">
                     Confirm
                 </div>
             </div>
             <div class="col-2">
-                <div class="btn btn-warning text-center my-2" id="cancelButton" style="display:none;" onclick="submitFormOrder('/cancel-order')">
+                <div class="btn btn-warning text-center my-2" id="cancelButton" style="display:none;" onclick="submitFormOrder('/supplier-cancel-order')">
                     Cancel
                 </div>
             </div>
