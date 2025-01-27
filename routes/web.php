@@ -36,6 +36,8 @@ Route::middleware(['checkUser'])->group(function () {
     Route::get('delete-cart-item-{id}', [UserController::class, 'deleteCartItem']);
     Route::get('checkout', [UserController::class, 'checkout']);
     Route::post('checkout', [UserController::class, 'checkoutKaro']);
+
+    Route::get('/invoice-{id}', [UserController::class, 'downloadInvoie']);
 });
 
 

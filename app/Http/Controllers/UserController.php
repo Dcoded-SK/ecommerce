@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\bill;
-use App\Models\Books;
 use App\Models\cart;
+use App\Models\Books;
 use App\Models\Genre;
 use App\Models\orders;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Exists;
-use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Component\CssSelector\Node\FunctionNode;
 
 class UserController extends Controller
@@ -140,26 +144,28 @@ class UserController extends Controller
             // Attach the book to the order using the pivot table
             $create_order->books()->attach($cart->books->id);
 
-            // Collect the order ID for further use
-            $order_ids[] = $create_order->id;
+
+
+
+            // Save the billing address of each orders
+            $bill_add = new bill();
+            $bill_add->order_id = $create_order->id;
+            $bill_add->name = $request['name'];
+            $bill_add->email = $request['email'];
+            $bill_add->address = $request['address'];
+            $bill_add->country = $request['country'];
+            $bill_add->contact = $request['contact_number'];
+            $bill_add->state = $request['state'];
+            $bill_add->pin_code = $request['pin_code'];
+            $bill_add->save();
 
             // Delete the cart item
             $cart->delete();
         }
 
-        // Get the latest order_id (or use the last created order)
-        $latest_order_id = max($order_ids);
 
-        $bill_add = new bill();
-        $bill_add->order_id = $latest_order_id;
-        $bill_add->name = $request['name'];
-        $bill_add->email = $request['email'];
-        $bill_add->address = $request['address'];
-        $bill_add->country = $request['country'];
-        $bill_add->contact = $request['contact_number'];
-        $bill_add->state = $request['state'];
-        $bill_add->pin_code = $request['pin_code'];
-        $bill_add->save();
+
+
 
         return redirect()->route("user-profile");
     }
@@ -181,5 +187,16 @@ class UserController extends Controller
         $cart = cart::with("books")->where("user_id", auth()->user()->id)->get();
 
         return view('userFolder.cart', compact("cart"));
+    }
+
+    public function downloadInvoie($id)
+    {
+
+        $order = orders::find($id);
+
+        $book_detail = Books::find($order->book_id);
+
+        $pdf = PDF::loadView('invoice', ['order_data' => $order, 'book' => $book_detail])->setPaper('A4', 'portrait');
+        return $pdf->download('invoice-' . $id . '.pdf');
     }
 }

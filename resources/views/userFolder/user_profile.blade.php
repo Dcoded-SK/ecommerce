@@ -123,6 +123,12 @@
                                     <div class="col-4 py-3">
                                         <h5>Status: {{ $order->status=="pending"? 'On the way':( $order->status=="confirm"?'Confirm': 'Cancelled')}}</h5>
                                         <h5>Del. date: {{ $order->status=="delivered"? $oder->updated_at : 'Estimated date?'}}</h5>
+
+                                        @if($order->status=="confirm")
+                                        <a href="invoice-{{ $order->id }}">
+                                            <div class="btn btn-primary">Download Invoice</div>
+                                        </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
