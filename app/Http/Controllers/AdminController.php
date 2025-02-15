@@ -19,6 +19,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
+
+
     // Open the admin home page
     public function adminHome(Request $request)
     {

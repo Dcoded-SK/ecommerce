@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2); // Use decimal for prices
             $table->string("supplier_id");
             $table->string("picture")->default("default.jgp");
+            $table->json("rating")->nullable();
             $table->timestamps();
         });
     }

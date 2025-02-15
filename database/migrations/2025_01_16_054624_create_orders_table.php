@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string("status")->default("pending");
             $table->decimal("total_price");
             $table->string("payment_method");
+            $table->integer("rating")->nullable();
             $table->timestamps();
         });
     }

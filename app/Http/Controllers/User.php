@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Jobs\SendNotificationJob;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Auth;
 
 class User extends Controller
 {
+
+
+
+
     // this funtion is to create new user
 
     public function addNewUser(Request $request)

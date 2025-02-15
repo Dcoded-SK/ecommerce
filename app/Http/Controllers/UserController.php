@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\bill;
 use App\Models\cart;
+use App\Models\User;
 use App\Models\Books;
 use App\Models\Genre;
 use App\Models\orders;
-use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
-
 use FontLib\Table\Type\name;
+
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Jobs\SendNotificationJob;
 use PhpParser\Node\Stmt\Foreach_;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Exists;
@@ -21,6 +22,11 @@ class UserController extends Controller
 {
     //
 
+
+    public function __construct()
+    {
+        dispatch(new SendNotificationJob("Hi, You are notified using queue"));
+    }
 
     public function userHome()
     {
@@ -198,5 +204,23 @@ class UserController extends Controller
 
         $pdf = PDF::loadView('invoice', ['order_data' => $order, 'book' => $book_detail])->setPaper('A4', 'portrait');
         return $pdf->download('invoice-' . $id . '.pdf');
+    }
+
+
+    public function orderRating(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|min:1'
+        ]);
+
+        $order = orders::find($id);
+
+        $book = $order->books()->first();
+
+        $order->rating = $request['rating'];
+        $order->save();
+
+        $book->ratings = $request['rating'];
+        $book->save();
     }
 }

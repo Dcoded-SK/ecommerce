@@ -1,7 +1,9 @@
 <?php
 
+use App\Console\Commands\SendNotification;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\firstController;
+use App\Http\Controllers\Notification;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\UserController;
@@ -38,6 +40,8 @@ Route::middleware(['checkUser'])->group(function () {
     Route::post('checkout', [UserController::class, 'checkoutKaro']);
 
     Route::get('/invoice-{id}', [UserController::class, 'downloadInvoie']);
+
+    Route::post("order-rating{id}", [UserController::class, 'orderRating']);
 });
 
 
@@ -146,3 +150,12 @@ Route::middleware(['checkUser'])->group(function () {
         Route::get("logout", [User::class, "logout"])->name("logout");
     });
 });
+
+
+Route::get('/temperature', [firstController::class, 'temperature']);
+Route::post('/temperature', [firstController::class, 'getTemperature']);
+
+
+// to send notification using queue
+
+Route::get('/queue-notification', [Notification::class, 'sendNotification']);

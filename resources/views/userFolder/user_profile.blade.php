@@ -121,15 +121,69 @@
                                         <h5>Total price: {{ $order->quantity* $book->price }}</h5>
                                     </div>
                                     <div class="col-4 py-3">
-                                        <h5>Status: {{ $order->status=="pending"? 'On the way':( $order->status=="confirm"?'Confirm': 'Cancelled')}}</h5>
-                                        <h5>Del. date: {{ $order->status=="delivered"? $oder->updated_at : 'Estimated date?'}}</h5>
+                                        <h5>Status: {{ $order->status == "pending" ? 'On the way' : ($order->status == "confirm" ? 'Confirm' : 'Cancelled') }}</h5>
+                                        <h5>Del. date: {{ $order->status == "delivered" ? $order->updated_at : 'Estimated date?' }}</h5>
 
-                                        @if($order->status=="confirm")
-                                        <a href="invoice-{{ $order->id }}">
-                                            <div class="btn btn-primary">Download Invoice</div>
-                                        </a>
+                                        @if($order->status == "confirm")
+                                        <style>
+                                            .rate {
+                                                float: left;
+                                                height: 46px;
+                                                padding: 0 10px;
+                                            }
+
+                                            .rate:not(:checked)>input {
+                                                position: absolute;
+                                                top: -9999px;
+                                            }
+
+                                            .rate:not(:checked)>label {
+                                                float: right;
+                                                width: 1em;
+                                                overflow: hidden;
+                                                white-space: nowrap;
+                                                cursor: pointer;
+                                                font-size: 30px;
+                                                color: #ccc;
+                                            }
+
+                                            .rate:not(:checked)>label:before {
+                                                content: '★ ';
+                                            }
+
+                                            .rate>input:checked~label {
+                                                color: #ffc700;
+                                            }
+
+                                            .rate:not(:checked)>label:hover,
+                                            .rate:not(:checked)>label:hover~label {
+                                                color: #deb217;
+                                            }
+
+                                            .rate>input:checked+label:hover,
+                                            .rate>input:checked+label:hover~label,
+                                            .rate>input:checked~label:hover,
+                                            .rate>input:checked~label:hover~label,
+                                            .rate>label:hover~input:checked~label {
+                                                color: #c59b08;
+                                            }
+
+                                        </style>
+
+                                        <form method="POST" action="/order-rating{{ $order->id }}">
+                                            @csrf
+                                            <div class="rate">
+                                                @for ($i = 5; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}-order{{ $order->id }}" name="rating" value="{{ $i }}" {{ $order->rating == $i ? 'checked' : '' }} />
+                                                <label for="star{{ $i }}-order{{ $order->id }}" title="{{ $i }} stars">{{ $i }} stars</label>
+                                                @endfor
+                                            </div>
+                                            <input type="submit"></input>
+                                        </form>
                                         @endif
                                     </div>
+
+
                                 </div>
                             </div>
                             @endforeach
